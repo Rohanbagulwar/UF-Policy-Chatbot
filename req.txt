@@ -1,0 +1,7 @@
+openpyxl
+aiohttp
+pandas
+beautifulsoup4
+langchain-text-splitters
+requests
+asyncio
