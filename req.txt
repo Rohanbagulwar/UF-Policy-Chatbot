@@ -1,7 +1,13 @@
 openpyxl
 aiohttp
 pandas
+openai
+
 beautifulsoup4
 langchain-text-splitters
 requests
 asyncio
+fastapi
+uvicorn[standard]
+sentence-transformers
+chromadb
