@@ -23,67 +23,67 @@ The UF Policy RAG Chatbot leverages a sophisticated retrieval-augmented generati
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    UF Policy RAG Chatbot Flow                    │
+│                    UF Policy RAG Chatbot Flow                   │
 ├─────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  1. DATA COLLECTION & PREPROCESSING                              │
-│     ↓                                                              │
+│                                                                  │
+│  1. DATA COLLECTION & PREPROCESSING                             │
+│     ↓                                                            │
 │  └─→ UF Website Scraping                                         │
 │      └─→ Extract policies (HTML → JSON)                          │
 │          └─→ policy_data.json                                    │
-│                                                                   │
+│                                                                  │
 │  2. TEXT CHUNKING & SPLITTING                                    │
-│     ↓                                                              │
-│  └─→ LangChain RecursiveCharacterTextSplitter                   │
-│      └─→ Chunk size: 1000 | Overlap: 200                       │
-│          └─→ Semantic preservation                              │
-│                                                                   │
+│     ↓                                                            │
+│  └─→ LangChain RecursiveCharacterTextSplitter                    │
+│      └─→ Chunk size: 1000 | Overlap: 200                         │
+│          └─→ Semantic preservation                               │
+│                                                                  │
 │  3. EMBEDDING GENERATION                                         │
-│     ↓                                                              │
-│  └─→ BGE Embedding Model (BAAI/bge-base-en-v1.5)              │
+│     ↓                                                            │
+│  └─→ BGE Embedding Model (BAAI/bge-base-en-v1.5)                 │
 │      └─→ Dimensions: 768                                         │
-│          └─→ 384D for small variant                             │
-│                                                                   │
+│          └─→ 384D for small variant                              │
+│                                                                  │
 │  4. VECTOR STORAGE                                               │
-│     ↓                                                              │
-│  └─→ ChromaDB Vector Database                                   │
-│      └─→ Persistent storage: ./chroma_db                        │
+│     ↓                                                            │
+│  └─→ ChromaDB Vector Database                                    │
+│      └─→ Persistent storage: ./chroma_db                         │
 │          └─→ Collection: "policies"                              │
-│                                                                   │
+│                                                                  │
 │  5. QUERY PROCESSING                                             │
-│     ↓                                                              │
+│     ↓                                                            │
 │  └─→ User Question Input                                         │
-│      └─→ Convert query to embedding (same model)                │
-│          └─→ Semantic similarity search                         │
-│              └─→ Retrieve top-k results (k=3-5)                 │
-│                                                                   │
+│      └─→ Convert query to embedding (same model)                 │
+│          └─→ Semantic similarity search                          │
+│              └─→ Retrieve top-k results (k=3-5)                  │
+│                                                                  │
 │  6. CONTEXT BUILDING                                             │
-│     ↓                                                              │
-│  └─→ Build contextual information from retrieved documents      │
-│      └─→ Format with metadata and relevance scores              │
-│          └─→ Prepare for LLM consumption                        │
-│                                                                   │
+│     ↓                                                            │
+│  └─→ Build contextual information from retrieved documents       │
+│      └─→ Format with metadata and relevance scores               │
+│          └─→ Prepare for LLM consumption                         │
+│                                                                  │
 │  7. PROMPT GENERATION                                            │
-│     ↓                                                              │
-│  └─→ System Prompt (Role definition)                            │
+│     ↓                                                            │
+│  └─→ System Prompt (Role definition)                             │
 │      ├─→ Retrieved Context                                       │
 │      ├─→ User Question                                           │
-│      └─→ Instruction for response generation                    │
-│                                                                   │
+│      └─→ Instruction for response generation                     │
+│                                                                  │
 │  8. LLM GENERATION                                               │
-│     ↓                                                              │
-│  └─→ OpenAI OSS 120B Model (UF Navigator)                       │
-│      └─→ Generate contextual answer                             │
-│          └─→ Temperature: 0.1 (factual)                         │
-│              └─→ Max tokens: 1000                               │
-│                                                                   │
+│     ↓                                                            │
+│  └─→ OpenAI OSS 120B Model (UF Navigator)                        │
+│      └─→ Generate contextual answer                              │
+│          └─→ Temperature: 0.1 (factual)                          │
+│              └─→ Max tokens: 1000                                │
+│                                                                  │
 │  9. RESPONSE DELIVERY                                            │
-│     ↓                                                              │
+│     ↓                                                            │
 │  └─→ Return Answer + Metadata                                    │
-│      └─→ Include source documents                               │
-│          └─→ Confidence scores                                  │
-│                                                                   │
-└─────────────────────────────────────────────────────────────────┘
+│      └─→ Include source documents                                │
+│          └─→ Confidence scores                                   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘|
 ```
 
 ---
@@ -246,18 +246,6 @@ pip install -r requirements.txt
 - `beautifulsoup4` - Web scraping
 - `pydantic` - Data validation
 
-#### 4. Set Up Environment Variables
-
-Create a `.env` file in the project root:
-```bash
-# OpenAI Configuration
-OPENAI_API_KEY=sk-your-api-key-here
-OPENAI_BASE_URL=https://api.ai.it.ufl.edu
-OPENAI_MODEL=gpt-oss-20b
-
-# Optional: Logging level
-LOG_LEVEL=INFO
-```
 
 ---
 
@@ -284,56 +272,12 @@ INFO:     Application startup complete
 #### Step 3: Access the Application
 - **Frontend**: Open browser → `http://localhost:8000`
 
-#### Step 4: Test the API
-```bash
-# Using curl
-curl -X POST "http://localhost:8000/query" \
-  -H "Content-Type: application/json" \
-  -d '{"question": "What is the academic integrity policy?"}'
-
-# Using Python requests
-import requests
-response = requests.post(
-    "http://localhost:8000/query",
-    json={"question": "What are the email policies?"}
-)
-print(response.json())
-```
-
----
-
-### Option 2: Docker Deployment
-
-#### Step 1: Build Docker Image
-```bash
-docker build -t uf-policy-chatbot:latest .
-```
-
-#### Step 2: Run Docker Container
-```bash
-# Run on port 8000
-docker run -p 8000:8000 uf-policy-chatbot:latest
-
-# Or run with custom port
-docker run -p 8080:7860 uf-policy-chatbot:latest
-```
-
-**Note**: The Dockerfile exposes port **7860** by default. Map to any port you prefer.
 
 #### Step 3: Access the Application
 - **Frontend**: `http://localhost:8000`
 - **API**: `http://localhost:8000/query`
 
-#### Step 4: Stop Container
-```bash
-# Find container ID
-docker ps
 
-# Stop the container
-docker stop <container-id>
-```
-
----
 
 ## 📁 Project Structure
 
@@ -460,53 +404,9 @@ QueryConfig:
   filter_by_type = None  # Optional metadata filtering
 ```
 
----
 
-## 🧪 Testing
-
-### Test API Endpoints
-
-#### 1. Health Check
-```bash
-curl http://localhost:8000/
-```
-
-#### 2. Query Endpoint (POST)
-```bash
-curl -X POST "http://localhost:8000/query" \
-  -H "Content-Type: application/json" \
-  -d {
-    "question": "What is the dress code policy?"
-  }
-```
-
-#### Response Format
-```json
-{
-  "answer": "The dress code policy states...",
-  "documents": [
-    {
-      "content": "...",
-      "metadata": {...},
-      "similarity_score": 0.92
-    }
-  ],
-  "query_time": 0.234
-}
-```
-
-### Run Jupyter Notebooks for Development
-
-```bash
-# Start Jupyter
-jupyter notebook
-
-# Or use JupyterLab
-jupyter lab
-```
-
-Then open any of the notebooks to test components:
-- Test embeddings: `RAG_workflw.ipynb`
+open any of the notebooks to test components:
+- Test embeddings: `RAG_workflow.ipynb`
 - Test retrieval: `retrival_notebook.ipynb`
 - Test full pipeline: `Rag_workflw.ipynb`
 - Compare performance: `RAG_accuracy_score_comparison.ipynb`
@@ -608,13 +508,13 @@ uvicorn app:app --port 8001
 
 ## 📝 License
 
-This project is created for University of Florida. See LICENSE file for details.
+This project is created for EGN-5442 Term project University of Florida.
 
 ---
 
 ## 👥 Contributors
 
-- **Author**: Rohan Bagulwar
+- **Author**: Rohan Bagulwar, Hitika Ghanani, Christina 
 - **Repository**: [UF-Policy-Chatbot](https://github.com/Rohanbagulwar/UF-Policy-Chatbot)
 
 ---
