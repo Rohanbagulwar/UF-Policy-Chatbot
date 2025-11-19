@@ -17,7 +17,7 @@ class ChromaDBConfig:
     collection_name: str = "policies"
     description: str = "UF Policy documents with embeddings"
 
-
+# models=['llama-3.1-70b-instruct','gemma-3-27b-it']
 @dataclass
 class OpenAIConfig:
     """Configuration for OpenAI client."""
