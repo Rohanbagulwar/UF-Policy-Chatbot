@@ -139,7 +139,6 @@ separator_list = [
 | **LLM** | OpenAI OSS 120B | v1 | Generate contextual responses |
 | **API Framework** | FastAPI | 0.121.1+ | REST endpoint creation |
 | **Server** | Uvicorn | Latest | ASGI server |
-| **Container** | Docker | Latest | Containerized deployment |
 | **Language** | Python | 3.10 | Core programming language |
 
 ---
@@ -413,6 +412,49 @@ open any of the notebooks to test components:
 
 ---
 
+## 🧾 Evaluation of Different LLMs
+
+This project includes an evaluation of multiple LLMs to measure answer quality on UF policy questions. The evaluation compares human-written (reference) answers against AI-generated answers using standard automatic metrics and manual inspection.
+
+### Evaluation Strategy
+
+- **Sample collection**: We collected a balanced set of **50 sample questions** drawn from UF policy pages and common policy-related queries encountered by users.
+- **Reference answers**: For each question, a human expert (project team) wrote a concise, authoritative reference answer based on the official UF policy text.
+- **Model responses**: Each LLM (evaluated models) was prompted via the RAG pipeline to generate an answer using the retrieved context from ChromaDB.
+- **Metrics**: We computed automated metrics for each (reference, prediction) pair:
+  - **BLEU** (n-gram precision)
+  - **ROUGE-1 / ROUGE-2 / ROUGE-L** (recall-oriented overlap)
+  - **METEOR**
+- **Aggregate scoring**: Per-question metric scores were averaged across the 50 samples and then combined (weighted equally or by chosen heuristic) into an aggregate score to rank models.
+- **Manual review**: In addition to automatic metrics, team members reviewed a subset of answers to check for factual correctness, hallucinations, and clarity.
+
+### Results Summary
+
+- The evaluation used the above metrics over the 50-sample set. Visualizations of the results (BLEU / ROUGE / METEOR and aggregate ranking) are included in the repository under `presentation_plots/`.
+- Summary ranking (aggregate score):
+  - **#1 — Llama**: Aggregate Score ≈ **0.2160**
+  - **#2 — GPT**: Aggregate Score ≈ **0.2133**
+  - **#3 — Gemma**: Aggregate Score ≈ **0.2102**
+
+These values reflect the averaged evaluation metrics across the 50 questions and were used to produce the model comparison plots included in the repo.
+
+### Where to find the visualizations
+
+- See the `presentation_plots/` directory for the charts used in analysis (ROC/score comparison, ROUGE variants, aggregate ranking). Example plots included:
+  - `overall_performance_comparison.png` — shows BLEU / ROUGE-L / METEOR / Aggregate_Score across models
+  - `rouge_variants_comparison.png` — ROUGE-1 / ROUGE-2 / ROUGE-L per model
+  - `model_ranking_aggregate.png` — Horizontal bar chart with aggregate scores and ranks
+
+### Notes & Interpretations
+
+- The differences in aggregate scores are small on this 50-question sample; for production decisions consider a larger evaluation set and human evaluation focusing on factuality and compliance.
+- Automated metrics like BLEU/ROUGE favor surface-level overlap and may not fully capture factual correctness or legal nuance — always include manual spot-checks for policy domains.
+- If you plan to re-run the evaluation:
+  1. keep the same 50-question test set and reference answers to ensure comparability, and
+  2. store model outputs (predictions) and per-question metrics as CSV for reproducible ranking.
+
+---
+
 ## 📊 Performance Metrics
 
 ### Typical Performance (on standard hardware):
@@ -514,12 +556,11 @@ This project is created for EGN-5442 Term project University of Florida.
 
 ## 👥 Contributors
 
-- **Author**: Rohan Bagulwar, Hitika Ghanani, Christina 
+- **Author**: Rohan Bagulwar 
 - **Repository**: [UF-Policy-Chatbot](https://github.com/Rohanbagulwar/UF-Policy-Chatbot)
 
 ---
 
-## 📞 Support
 
 For issues, questions, or suggestions:
 1. Check existing GitHub issues
@@ -572,3 +613,6 @@ curl -X POST "http://localhost:8000/query" \
 ```
 
 ---
+
+
+

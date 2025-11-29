@@ -26,8 +26,8 @@ class EmbeddingModel:
         print(f"Loading embedding model: {self.config.model_name}")
         self.model = SentenceTransformer(self.config.model_name)
         self.config.dimension = self.model.get_sentence_embedding_dimension()
-        print(f"✓ Model loaded successfully!")
-        print(f"  Embedding dimension: {self.config.dimension}")
+        print(f"Model loaded successfully!")
+        print(f" Embedding dimension: {self.config.dimension}")
         return self.model
     
     def encode(self, texts: List[str]) -> np.ndarray:

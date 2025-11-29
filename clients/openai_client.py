@@ -28,7 +28,7 @@ class OpenAIClientManager:
                 base_url=self.config.base_url
             )
             
-            print('✓ OpenAI client created successfully')
+            print('penAI client created successfully')
             print(f'  Base URL: {self.config.base_url}')
             print(f'  Client type: {type(self.client)}')
             
@@ -71,7 +71,7 @@ class OpenAIClientManager:
         temperature = temperature or self.config.temperature
         max_tokens = max_tokens or self.config.max_tokens
         
-        print(f"\n🤖 Querying {model}...")
+        print(f"\nQuerying {model}...")
         response = self.client.chat.completions.create(
             model=model,
             messages=messages,
@@ -79,5 +79,5 @@ class OpenAIClientManager:
             max_tokens=max_tokens
         )
         
-        print("✓ Response received successfully")
+        print("Response received successfully")
         return response

@@ -94,7 +94,7 @@ class ChromaDBManager:
             metadatas=metadatas,
             ids=ids
         )
-        print(f"✓ Added {len(documents)} documents to collection")
+        print(f"Added {len(documents)} documents to collection")
     
     def get_collection_stats(self) -> Dict[str, Any]:
         """Get collection statistics."""
